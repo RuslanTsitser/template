@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   syncfusion_flutter_pdf: ^23.1.41
+  syncfusion_flutter_pdfviewer: ^23.1.41
+  universal_html: ^2.2.4
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -18,3 +20,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
+    - assets/files/
