@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pdf_editor/features/pdf/presentation/pdf_screen.dart';
+import 'package:pdf_editor/features/splash/presentation/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: PdfScreen(),
+      home: SplashScreen(),
     );
   }
 }
