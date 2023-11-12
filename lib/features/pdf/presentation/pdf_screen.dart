@@ -14,7 +14,7 @@ class PdfScreen extends StatelessWidget {
         },
       ),
       body: const Center(
-        child: Text("Pdf Page"), // TODO: Add widget for pdf
+        child: Text('Pdf Page'), // TODO: Add widget for pdf
       ),
     );
   }
