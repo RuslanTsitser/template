@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pdf_editor/features/auth/data/auth_repository_mock_impl.dart';
+import 'package:pdf_editor/core/services/local_storage_service/local_storage_service.dart';
+import 'package:pdf_editor/features/auth/data/auth_repository_local_storage_impl.dart';
 import 'package:pdf_editor/features/auth/domain/auth_repository.dart';
 import 'package:pdf_editor/features/auth/logic/auth/auth_bloc.dart';
+import 'package:pdf_editor/features/auth/presentation/auth_screen.dart';
 import 'package:pdf_editor/features/pdf/presentation/pdf_screen.dart';
 import 'package:pdf_editor/features/splash/presentation/splash_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,8 +17,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<LocalStorageService>(
+          create: (context) => LocalStorageServiceImpl(),
+        ),
         RepositoryProvider<AuthRepository>(
-          create: (context) => AuthRepositoryMockImpl(),
+          create: (context) => AuthRepositoryLocalStorageImpl(
+            localStorageService: context.read(),
+          ),
         ),
       ],
       child: MultiBlocProvider(
@@ -45,7 +50,11 @@ class App extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: state is AuthStateAuthenticated ? const PdfScreen() : const SplashScreen(),
+          home: switch (state) {
+            AuthStateAuthenticated() => const PdfScreen(),
+            AuthStateUnAuthenticated() => const AuthScreen(),
+            AuthInitial() => const SplashScreen(),
+          },
         );
       },
     );
