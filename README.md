@@ -24,6 +24,10 @@ samples, guidance on mobile development, and a full API reference.
 - Business logic is placed in blocs/cubits and ChangeNotifier
 - Blocs/Cubits are used for complex business logic, ChangeNotifier is used for simple business logic
 - The structure of the project is based on the Clean Architecture to achieve the opportunity of easy scaling, testing and sharing the code
+- Every layer depends on abstractions of the layer below only:
+  - In presentation layer we can use only blocs/cubits and ChangeNotifier
+  - In business logic layer we can use only repositories; blocs/cubits and ChangeNotifier depend on abstract repositories
+  - In data layer we can use only services; repositories depend on abstract services
 - The project is divided into two big parts:
   - Core contains all the code that is used in the whole project (like models, services, etc)
   - Features contains all the code that is used in a specific feature (like blocs, screens, etc)
