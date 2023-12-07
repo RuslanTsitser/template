@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pdf_editor/core/presentation/theme/app_colors.dart';
-import 'package:pdf_editor/core/presentation/theme/app_text.dart';
-import 'package:pdf_editor/core/utils/color.dart';
+import 'package:project_template/core/presentation/theme/app_colors.dart';
+import 'package:project_template/core/presentation/theme/app_text.dart';
+import 'package:project_template/core/utils/color.dart';
 
 abstract class AppTheme {
   static ThemeData get lightTheme => ThemeData(
