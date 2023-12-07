@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' show log;
 
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 export 'app_bloc_observer.dart';
@@ -11,7 +12,13 @@ final _logger = Logger(
   output: ConsoleOutput(
     truncate: false,
   ),
-  // printer: LogfmtPrinter(), // логи без рамки
+  printer: PrettyPrinter(
+    colors: true,
+    printTime: false,
+    printEmojis: false,
+    noBoxingByDefault: false,
+    lineLength: 80,
+  ),
 );
 
 Logger get _truncateLogger => Logger(
@@ -23,8 +30,11 @@ Logger get _truncateLogger => Logger(
         printTime: false,
         printEmojis: false,
         noBoxingByDefault: false,
+        lineLength: 80,
       ),
     );
+
+bool get _enableLogger => true;
 
 bool get _showBLOC => true;
 bool get _showAppRouter => true;
@@ -42,7 +52,7 @@ void logInfo(dynamic data) => _logger.i(data);
 
 StreamController<({dynamic message, StackTrace? stackTrace, dynamic error})> _logStreamController =
     StreamController.broadcast();
-void _logErrorStream(dynamic data, [dynamic error, StackTrace? stackTrace]) {
+void _logErrorSink(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   final message = (message: data, stackTrace: stackTrace, error: error);
   _logStreamController.add(message);
 }
@@ -51,14 +61,14 @@ Stream<({dynamic message, StackTrace? stackTrace, dynamic error})> get logStream
 
 void logError(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   _logger.e(data, error: error, stackTrace: stackTrace);
-  _logErrorStream(data, error, stackTrace);
+  _logErrorSink(data, error, stackTrace);
 }
 
 // BLOC logs
 void logBlOC(dynamic data) => _showBLOC ? _logger.i(data) : null;
 void logErrorBlOC(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   _showBLOC ? _logger.e(data, error: error, stackTrace: stackTrace) : null;
-  _showBLOC ? _logErrorStream(data, error, stackTrace) : null;
+  _showBLOC ? _logErrorSink(data, error, stackTrace) : null;
 }
 
 // APP ROUTER logs
@@ -68,7 +78,7 @@ void logAppRouter(dynamic data) => _showAppRouter ? _logger.i(data) : null;
 void logRestApi(dynamic data) => _showRestApi ? _truncateLogger.i(data) : null;
 void logErrorRestApi(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   _showRestApi ? _logger.e(data, error: error, stackTrace: stackTrace) : null;
-  _showRestApi ? _logErrorStream(data, error, stackTrace) : null;
+  _showRestApi ? _logErrorSink(data, error, stackTrace) : null;
 }
 
 // Change notifier logs
@@ -84,21 +94,21 @@ void logAds(dynamic data) => _showAds ? _logger.i(data) : null;
 void logAbTest(dynamic data) => _showAbTest ? _logger.i(data) : null;
 void logErrorAbTest(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   _showAbTest ? _logger.e(data, error: error, stackTrace: stackTrace) : null;
-  _showAbTest ? _logErrorStream(data, error, stackTrace) : null;
+  _showAbTest ? _logErrorSink(data, error, stackTrace) : null;
 }
 
 // LocalStorage logs
 void logLocalStorage(dynamic data) => _showLocalStorage ? _logger.i(data) : null;
 void logErrorLocalStorage(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   _showLocalStorage ? _logger.e(data, error: error, stackTrace: stackTrace) : null;
-  _showLocalStorage ? _logErrorStream(data, error, stackTrace) : null;
+  _showLocalStorage ? _logErrorSink(data, error, stackTrace) : null;
 }
 
 // Firebase logs
 void logFirebase(dynamic data) => _showFirebase ? _logger.i(data) : null;
 void logErrorFirebase(dynamic data, [dynamic error, StackTrace? stackTrace]) {
   _showFirebase ? _logger.e(data, error: error, stackTrace: stackTrace) : null;
-  _showFirebase ? _logErrorStream(data, error, stackTrace) : null;
+  _showFirebase ? _logErrorSink(data, error, stackTrace) : null;
 }
 
 class ConsoleOutput extends LogOutput {
@@ -112,8 +122,14 @@ class ConsoleOutput extends LogOutput {
       lines = lines.sublist(0, lineLength);
       lines.add('...');
     }
-    for (var element in lines) {
-      log(element);
+    if (_enableLogger) {
+      if (kIsWeb) {
+        for (var element in lines) {
+          log(element);
+        }
+      } else {
+        log(lines.join('\n'));
+      }
     }
   }
 }
