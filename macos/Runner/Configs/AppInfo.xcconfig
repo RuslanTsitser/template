@@ -8,7 +8,7 @@
 PRODUCT_NAME = project_template
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.mycompany.pdfEditor
+PRODUCT_BUNDLE_IDENTIFIER = com.tsitser.mobile.dev.template
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 com.mycompany. All rights reserved.
